@@ -1,0 +1,32 @@
+# docker-compose.yml file
+version: '3.2'
+
+services:
+  postgres:
+    restart: always
+    container_name: postgres
+    build:
+            dockerfile: ./postgres/Dockerfile
+            context: .
+    volumes:
+      - type: volume
+        source: pg_data
+        target: /pg_data
+      - type: bind
+        source: /home/META
+        target: /data
+    ports:
+      - "8001:5432"
+  pgadmin:
+          restart: always
+          image: dpage/pgadmin4
+          container_name: pgadmin
+          ports:
+                - "1234:80"
+          depends_on:
+                - postgres
+          environment:
+                  PGADMIN_DEFAULT_EMAIL: admin@admin.com
+                  PGADMIN_DEFAULT_PASSWORD: adminadmin
+volumes:
+  pg_data:
